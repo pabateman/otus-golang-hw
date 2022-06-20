@@ -7,7 +7,7 @@ import (
 )
 
 // Change to true if needed.
-var taskWithAsteriskIsCompleted = false
+var taskWithAsteriskIsCompleted = true
 
 var text = `Как видите, он  спускается  по  лестнице  вслед  за  своим
 	другом   Кристофером   Робином,   головой   вниз,  пересчитывая
@@ -42,6 +42,29 @@ var text = `Как видите, он  спускается  по  лестни�
 	иногда,  особенно  когда  папа  дома,  он больше любит тихонько
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
+
+var textEng = `In Acid for the Children, Flea takes readers on a deeply
+	personal and revealing tour of his formative years, spanning from
+	Australia to the New York City suburbs to, finally, Los Angeles.
+	Through hilarious anecdotes, poetical meditations, and occasional
+	flights of fantasy, Flea deftly chronicles the experiences that forged
+	him as an artist, a musician, and a young man. His dreamy, jazz-inflected
+	prose makes the Los Angeles of the 1970s and 80s come to gritty, glorious
+	life, including the potential for fun, danger, mayhem, or inspiration that
+	lurked around every corner. It is here that young Flea, looking to escape
+	a turbulent home, found family in a community of musicians, artists, and
+	junkies who also lived on the fringe. He spent most of his time partying
+	and committing petty crimes. But it was in music where he found a higher
+	meaning, a place to channel his frustration, loneliness, and love. This
+	left him open to the life-changing moment when he and his best friends,
+	soul brothers, and partners-in-mischief came up with the idea to start
+	their own band, which became the Red Hot Chili Peppers.`
+
+var textReduced = `Клетки.
+	Вас держат в коробке?
+	Клетки.
+	Связаны.
+	Связаны.`
 
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
@@ -78,5 +101,32 @@ func TestTop10(t *testing.T) {
 			}
 			require.Equal(t, expected, Top10(text))
 		}
+	})
+
+	t.Run("positive test of english text", func(t *testing.T) {
+		expected := []string{
+			"the",  // 10
+			"and",  // 8
+			"a",    // 6
+			"to",   // 6
+			"his",  // 5
+			"of",   // 5
+			"flea", // 3
+			"he",   // 3
+			"in",   // 2
+			"that", // 2
+		}
+		require.Equal(t, expected, Top10(textEng))
+	})
+	t.Run("positive test of reduced text", func(t *testing.T) {
+		expected := []string{
+			"клетки",  // 2
+			"связаны", // 2
+			"в",       // 1
+			"вас",     // 1
+			"держат",  // 1
+			"коробке", // 1
+		}
+		require.Equal(t, expected, Top10(textReduced))
 	})
 }
