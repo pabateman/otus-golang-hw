@@ -16,7 +16,7 @@ func Top10(input string) []string {
 	expression := regexp.MustCompile(`\p{L}+\-\p{L}+|[\p{L}]+`)
 	slicedInput := expression.FindAllString(lowedInput, -1)
 
-	wordMap := make(map[string]int, 0)
+	wordMap := make(map[string]int)
 	for _, word := range slicedInput {
 		wordMap[word]++
 	}
