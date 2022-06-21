@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+var expression = regexp.MustCompile(`\p{L}+\-\p{L}+|[\p{L}]+`)
+
 type counter struct {
 	word  string
 	count int
@@ -13,7 +15,6 @@ type counter struct {
 
 func Top10(input string) []string {
 	lowedInput := strings.ToLower(input)
-	expression := regexp.MustCompile(`\p{L}+\-\p{L}+|[\p{L}]+`)
 	slicedInput := expression.FindAllString(lowedInput, -1)
 
 	wordMap := make(map[string]int)
@@ -21,7 +22,7 @@ func Top10(input string) []string {
 		wordMap[word]++
 	}
 
-	wordCounter := make([]counter, 0)
+	wordCounter := make([]counter, 0, len(wordMap))
 	for i := range wordMap {
 		wordCounter = append(wordCounter, counter{
 			word:  i,
