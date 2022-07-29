@@ -81,29 +81,23 @@ func TestCache(t *testing.T) {
 	t.Run("rollout test", func(t *testing.T) {
 		c := NewCache(3)
 
-		wasInCache := c.Set("a", 10)
-		require.False(t, wasInCache)
+		for i := 10; i <= 40; i += 10 {
+			key := Key(fmt.Sprint(i))
+			wasInCache := c.Set(key, 10)
+			require.False(t, wasInCache)
+		}
 
-		wasInCache = c.Set("b", 20)
-		require.False(t, wasInCache)
-
-		wasInCache = c.Set("c", 30)
-		require.False(t, wasInCache)
-
-		wasInCache = c.Set("d", 40)
-		require.False(t, wasInCache)
-
-		val, ok := c.Get("a")
+		val, ok := c.Get("10")
 		require.False(t, ok)
 		require.Nil(t, val)
 
-		wasInCache = c.Set("b", 200)
+		wasInCache := c.Set("20", 200)
 		require.True(t, wasInCache)
 
-		wasInCache = c.Set("e", 50)
+		wasInCache = c.Set("50", 50)
 		require.False(t, wasInCache)
 
-		val, ok = c.Get("b")
+		val, ok = c.Get("20")
 		require.True(t, ok)
 		require.Equal(t, val, 200)
 	})
