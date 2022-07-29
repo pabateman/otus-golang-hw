@@ -1,6 +1,7 @@
 package hw04lrucache
 
 import (
+	"fmt"
 	"math/rand"
 	"strconv"
 	"sync"
@@ -49,14 +50,66 @@ func TestCache(t *testing.T) {
 		require.Nil(t, val)
 	})
 
-	t.Run("purge logic", func(t *testing.T) {
-		// Write me
+	t.Run("clear test", func(t *testing.T) {
+		c := NewCache(5)
+
+		for i := 1; i <= 5; i++ {
+			key := Key(fmt.Sprint(i))
+			c.Set(key, i)
+		}
+
+		c.Clear()
+
+		for i := 1; i <= 5; i++ {
+			val, ok := c.Get(Key(fmt.Sprint(i)))
+			require.False(t, ok)
+			require.Nil(t, val)
+		}
+
+		for i := 101; i <= 105; i++ {
+			key := Key(fmt.Sprint(i))
+			c.Set(key, i)
+		}
+
+		for i := 101; i <= 105; i++ {
+			val, ok := c.Get(Key(fmt.Sprint(i)))
+			require.True(t, ok)
+			require.Equal(t, val, i)
+		}
+	})
+
+	t.Run("rollout test", func(t *testing.T) {
+		c := NewCache(3)
+
+		wasInCache := c.Set("a", 10)
+		require.False(t, wasInCache)
+
+		wasInCache = c.Set("b", 20)
+		require.False(t, wasInCache)
+
+		wasInCache = c.Set("c", 30)
+		require.False(t, wasInCache)
+
+		wasInCache = c.Set("d", 40)
+		require.False(t, wasInCache)
+
+		val, ok := c.Get("a")
+		require.False(t, ok)
+		require.Nil(t, val)
+
+		wasInCache = c.Set("b", 200)
+		require.True(t, wasInCache)
+
+		wasInCache = c.Set("e", 50)
+		require.False(t, wasInCache)
+
+		val, ok = c.Get("b")
+		require.True(t, ok)
+		require.Equal(t, val, 200)
 	})
 }
 
 func TestCacheMultithreading(t *testing.T) {
-	t.Skip() // Remove me if task with asterisk completed.
-
 	c := NewCache(10)
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
